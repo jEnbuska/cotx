@@ -1,0 +1,31 @@
+{
+  "name": "generator-context",
+  "version": "1.0.0",
+  "engines": {
+    "node": ">=22.x"
+  },
+  "type": "module",
+  "description": "context poviding using generator functions",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prettier:write": "prettier --write lib index.ts",
+    "build": "tsc"
+  },
+  "author": "Joona Enbuska",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^24.0.7",
+    "prettier": "^3.6.2"
+  }
+}

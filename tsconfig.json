@@ -1,0 +1,17 @@
+{
+    "compilerOptions": {
+        "target": "ES2024",
+        "module": "ESNext",          // or "NodeNext" if you're publishing ESM
+        "lib": ["ES2024", "DOM"],
+        "declaration": true,             // ✅ Generates .d.ts files
+        "declarationDir": "dist",        // optional: puts .d.ts files in dist
+        "outDir": "dist",                // where compiled files go
+        "rootDir": ".",                  // where the source files are
+        "moduleResolution": "node",
+        "esModuleInterop": true,
+        "forceConsistentCasingInFileNames": true,
+        "strict": true,
+        "skipLibCheck": true
+    },
+    "include": ["index.ts", "lib/**/*.ts"],
+}
