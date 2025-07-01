@@ -7,6 +7,11 @@ import {
 import ContextError from "./context-error";
 
 export default class Context<TNext> {
+  public defaultProvider: ContextProvider<never, TNext> | undefined;
+  constructor(defaultProvider?: ContextProvider<never, TNext>) {
+    this.defaultProvider = defaultProvider;
+  }
+
   public static *getProvider<TNext>(
     context: Context<TNext>,
   ): Generator<Context<TNext>, TNext, TNext> {
