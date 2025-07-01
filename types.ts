@@ -1,36 +1,37 @@
-export type GeneratorContextRequest<Args extends any[]> = {
-  context: symbol;
-  args: Args;
-  name: string;
-};
+import Context from "./lib/create-context";
 
-export type AnyGenerator<Return = any> =
-  | Generator<unknown, Return>
-  | AsyncGenerator<unknown, Return>;
+export type AnyGenerator<TReturn = any> = AsyncGenerator<unknown, TReturn>;
 
-export type GeneratorContext<
-  Name extends string,
-  Args extends any[],
-  Return,
-  ProviderArgs extends any[] = Args,
-> = {
-  [K in `get${Capitalize<Name>}Context`]: GetGeneratorContext<Args, Return>;
-} & {
-  [K in `create${Capitalize<Name>}Provider`]: CreateGeneratorContextProvider<
-    ProviderArgs,
-    Args,
-    Return
-  >;
-};
+export type GeneratorContextProvider<Return> = () => AsyncGenerator<
+  GeneratorProviderReturn<Return, Return>
+>;
 
-export type GeneratorContextProvider<Args extends any[], Return> = (
-  ...args: Args
-) => AnyGenerator<Return | Promise<Return>> | Promise<Return> | Return;
+export type CreateGeneratorContextProvider<TReturn> = (
+  provider: GeneratorContextProvider<GeneratorProviderReturn<TReturn, TReturn>>,
+) => (generator: AsyncGenerator) => AsyncGenerator;
 
-export type CreateGeneratorContextProvider<ProviderArgs extends any[], Args extends any[], Return> = (
-  provider: GeneratorContextProvider<[...ProviderArgs, ...Args], Return>,
-) => (generator: AnyGenerator) => AsyncGenerator;
+export type ContextProvider<TReturn, TNext> = () => AsyncGenerator<
+  TNext,
+  GeneratorProviderReturn<TNext, TReturn>
+>;
 
-export type GetGeneratorContext<Args extends any[], Return> = (
-  ...args: Args
-) => AsyncGenerator<GeneratorContextRequest<Args>, Return>;
+export type GeneratorProviderReturn<TNext, TReturn, TThrow = Error> =
+  | {
+      next: TNext;
+    }
+  | {
+      return: TReturn;
+    }
+  | {
+      throw: TThrow;
+    };
+
+export type Consumer<TArgs extends any[], TNext, TReturn> = (
+  ...args: TArgs[]
+) =>
+  | AsyncGenerator<Context<TNext>, TReturn, TNext>
+  | Generator<Context<TNext>, TReturn, TNext>;
+
+export type ConsumerGenerator<TNext, TReturn> =
+  | AsyncGenerator<Context<TNext>, TReturn, TNext>
+  | Generator<Context<TNext>, TReturn, TNext>;
