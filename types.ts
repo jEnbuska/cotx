@@ -1,21 +1,12 @@
 import Context from "./lib/create-context";
 
-export type AnyGenerator<TReturn = any> = AsyncGenerator<unknown, TReturn>;
+export type Provider<TNext, TReturn, Args extends any[] = never[]> = ((
+  ...args: Args
+) => AsyncGenerator<TNext, ProviderReturn<TNext, TReturn>>) & {
+  readonly context: Context<TNext>;
+};
 
-export type GeneratorContextProvider<Return> = () => AsyncGenerator<
-  GeneratorProviderReturn<Return, Return>
->;
-
-export type CreateGeneratorContextProvider<TReturn> = (
-  provider: GeneratorContextProvider<GeneratorProviderReturn<TReturn, TReturn>>,
-) => (generator: AsyncGenerator) => AsyncGenerator;
-
-export type ContextProvider<TReturn, TNext> = () => AsyncGenerator<
-  TNext,
-  GeneratorProviderReturn<TNext, TReturn>
->;
-
-export type GeneratorProviderReturn<TNext, TReturn, TThrow = Error> =
+export type ProviderReturn<TNext, TReturn = void, TThrow = Error> =
   | {
       next: TNext;
     }
@@ -28,10 +19,10 @@ export type GeneratorProviderReturn<TNext, TReturn, TThrow = Error> =
 
 export type Consumer<TArgs extends any[], TNext, TReturn> = (
   ...args: TArgs[]
-) =>
-  | AsyncGenerator<Context<TNext>, TReturn, TNext>
-  | Generator<Context<TNext>, TReturn, TNext>;
+) => ConsumerGenerator<TNext, TReturn>;
 
-export type ConsumerGenerator<TNext, TReturn> =
-  | AsyncGenerator<Context<TNext>, TReturn, TNext>
-  | Generator<Context<TNext>, TReturn, TNext>;
+export type ConsumerGenerator<TNext, TReturn> = AsyncGenerator<
+  Context<TNext>,
+  TReturn,
+  TNext
+>;
